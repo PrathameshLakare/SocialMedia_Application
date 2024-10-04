@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "./userSlice";
+import { fetchUsers, updateUser } from "./userSlice";
+import { fetchPosts } from "../post/postSlice";
 
 const MyProfile = () => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+    dispatch(fetchPosts());
+  }, []);
+
   const users = useSelector((state) => state.users);
   const { posts } = useSelector((state) => state.posts);
 
@@ -11,14 +18,13 @@ const MyProfile = () => {
     (post) => post.author === "66f64f5fd890c4a6b89aacf7"
   ).length;
 
-  const user = users?.users.find(
+  const user = users?.users?.find(
     (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"
   );
 
-  const [avatar, setAvatar] = useState(user.avatar);
   const [bio, setBio] = useState(user.bio);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(avatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(user.avatar);
 
   const avatarOptions = [
     "https://img.freepik.com/free-psd/3d-rendering-avatar_23-2150833554.jpg?size=626&ext=jpg&ga=GA1.1.1278706250.1727432548&semt=ais_hybrid",
@@ -34,11 +40,15 @@ const MyProfile = () => {
   };
 
   const handleSave = () => {
-    setAvatar(selectedAvatar);
     setBio(bio);
     setIsEditing(false);
 
-    dispatch(updateUser({ userId: user._id, userData: { avatar, bio } }));
+    dispatch(
+      updateUser({
+        userId: user._id,
+        userData: { avatar: selectedAvatar, bio },
+      })
+    );
   };
 
   return (
@@ -49,7 +59,7 @@ const MyProfile = () => {
           <h2>User Profile</h2>
           <div>
             <img
-              src={avatar}
+              src={selectedAvatar}
               alt="Profile Avatar"
               className="profile-avatar img-fluid rounded-circle w-50"
             />
@@ -68,9 +78,9 @@ const MyProfile = () => {
             <div className="p-3 my-3">
               <h3>Choose an Avatar</h3>
               <div className="avatar-options">
-                {avatarOptions.map((avatarOption) => (
+                {avatarOptions.map((avatarOption, index) => (
                   <img
-                    key={avatarOption}
+                    key={`${avatarOption}${index}`}
                     src={avatarOption}
                     alt="Avatar Option"
                     className="img-fluid rounded-circle w-25"
@@ -106,10 +116,7 @@ const MyProfile = () => {
                 <p>{user.following.length}</p>
                 <p>Following</p>
               </div>
-              <div className="col">
-                <p>{user.followers.length}</p>
-                <p>Followers</p>
-              </div>
+
               <div className="col">
                 <p>{totalPosts}</p>
                 <p>Posts</p>

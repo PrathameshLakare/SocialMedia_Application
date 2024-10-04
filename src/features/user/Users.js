@@ -11,7 +11,7 @@ const Users = () => {
         <ul className="list-group">
           {users &&
             users.map((user) => (
-              <li className="list-group-item py-2">
+              <li key={user._id} className="list-group-item py-2">
                 <Link
                   to={
                     user._id === "66f64f5fd890c4a6b89aacf7"

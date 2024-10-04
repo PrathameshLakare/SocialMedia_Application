@@ -7,7 +7,6 @@ import {
   BsBookmarkFill,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import Users from "../user/Users";
 
 const PostList = () => {
   const dispatch = useDispatch();
@@ -55,75 +54,80 @@ const PostList = () => {
               <div className="card-header bg-white">
                 {user ? (
                   <div>
-                    <Link
-                      to={
-                        user._id === "66f64f5fd890c4a6b89aacf7"
-                          ? "/myProfile"
-                          : `/profile/${user._id}`
-                      }
-                    >
-                      <div className="row">
-                        <div className="col-3 col-md-2">
+                    <div className="row">
+                      <div className="col-3 col-md-2">
+                        <Link
+                          to={
+                            user._id === "66f64f5fd890c4a6b89aacf7"
+                              ? "/myProfile"
+                              : `/profile/${user._id}`
+                          }
+                        >
                           <img
                             src={user.avatar || "default-avatar.png"}
                             alt={`${user.username}'s avatar`}
                             className="img-fluid float-start rounded-circle w-50  "
                           />
-                        </div>
-
-                        <div className="col-3 col-md-2">
-                          <span className="float-start text-secondary me-2">
-                            {" "}
-                            {user.username}
-                          </span>
-                        </div>
-                        <div className="col-2 col-md-5 text-secondary">
-                          <span className="ms-2 ps-2 float-start">
-                            {formattedDate}
-                          </span>
-                        </div>
-
-                        <div className="col-4 col-md-3 text-end">
-                          {user._id === "66f64f5fd890c4a6b89aacf7" && (
-                            <div className="dropdown">
-                              <button
-                                className="btn dropdown-toggle"
-                                type="button"
-                                id="dropdownMenuButton"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                              >
-                                <BsListUl />
-                              </button>
-                              <ul
-                                className="dropdown-menu"
-                                aria-labelledby="dropdownMenuButton"
-                              >
-                                <li>
-                                  <Link
-                                    className="btn dropdown-item"
-                                    to={"/createPost"}
-                                    state={post}
-                                  >
-                                    Edit
-                                  </Link>
-                                </li>
-                                <li>
-                                  <button
-                                    className="dropdown-item"
-                                    onClick={() =>
-                                      dispatch(deletePost(post._id))
-                                    }
-                                  >
-                                    Delete
-                                  </button>
-                                </li>
-                              </ul>
-                            </div>
-                          )}
-                        </div>
+                        </Link>
                       </div>
-                    </Link>
+
+                      <div className="col-3 col-md-3">
+                        <Link
+                          to={
+                            user._id === "66f64f5fd890c4a6b89aacf7"
+                              ? "/myProfile"
+                              : `/profile/${user._id}`
+                          }
+                        >
+                          <span className="float-start text-secondary ">
+                            {user.username}{" "}
+                          </span>
+                        </Link>
+                      </div>
+                      <div className="col-3 col-md-4 text-secondary">
+                        <span className="ms-2 ps-2 float-start">
+                          {formattedDate}
+                        </span>
+                      </div>
+
+                      <div className="col-3 col-md-3 text-end">
+                        {user._id === "66f64f5fd890c4a6b89aacf7" && (
+                          <div className="dropdown">
+                            <button
+                              className="btn dropdown-toggle"
+                              type="button"
+                              id="dropdownMenuButton"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <BsListUl className="mb-3 " />
+                            </button>
+                            <ul
+                              className="dropdown-menu"
+                              aria-labelledby="dropdownMenuButton"
+                            >
+                              <li>
+                                <Link
+                                  className="btn dropdown-item"
+                                  to={"/createPost"}
+                                  state={post}
+                                >
+                                  Edit
+                                </Link>
+                              </li>
+                              <li>
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => dispatch(deletePost(post._id))}
+                                >
+                                  Delete
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <span>Unknown User</span>

@@ -5,41 +5,54 @@ import {
   followUser,
   unfollowUser,
 } from "../features/user/userSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const UsersProfile = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
-  const userId = useParams().userId;
+  const { userId } = useParams();
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
 
-  const user = users?.users.find((usr) => usr._id === userId);
-  const loginUser = users?.users.find(
+  const user = users?.users?.find((usr) => usr._id === userId);
+  const loginUser = users?.users?.find(
     (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"
   );
+
+  useEffect(() => {
+    if (loginUser && userId) {
+      setFollow(loginUser.following.includes(userId));
+    }
+  }, []);
+
+  const [follow, setFollow] = useState(false);
 
   const handlerForFollowBtn = (followId) => {
     const isFollow = loginUser.following.includes(followId);
     if (isFollow) {
       dispatch(
         unfollowUser({
-          userId: "66f64f5fd890c4a6b89aacf7",
-          followUserId: userId,
+          userId: loginUser._id,
+          followUserId: followId,
         })
       );
+      setFollow(false);
     } else {
       dispatch(
-        followUser({ userId: "66f64f5fd890c4a6b89aacf7", followUserId: userId })
+        followUser({
+          userId: loginUser._id,
+          followUserId: followId,
+        })
       );
+      setFollow(true);
     }
   };
 
   return (
     <div>
-      {users && (
+      {user && (
         <div className="profile-container text-center">
           <h2>User Profile</h2>
           <div>
@@ -58,11 +71,12 @@ const UsersProfile = () => {
             <h4>Bio</h4>
             <p>{user.bio}</p>
           </div>
+
           <button
             className="btn border-dark"
             onClick={() => handlerForFollowBtn(user._id)}
           >
-            {loginUser.following.includes(user._id) ? "Following" : "Follow"}
+            {follow ? "Following" : "Follow"}
           </button>
         </div>
       )}

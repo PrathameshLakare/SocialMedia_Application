@@ -5,32 +5,26 @@ import {
   followUser,
   unfollowUser,
 } from "../features/user/userSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const UsersProfile = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
   const { userId } = useParams();
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, []);
+  }, [dispatch]);
 
+  const users = useSelector((state) => state.users);
   const user = users?.users?.find((usr) => usr._id === userId);
-  const loginUser = users?.users?.find(
-    (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"
-  );
 
-  useEffect(() => {
-    if (loginUser && userId) {
-      setFollow(loginUser.following.includes(userId));
-    }
-  }, []);
-
-  const [follow, setFollow] = useState(false);
+  // Hardcoded loginUser ID
+  const loginUserId = "66f64f5fd890c4a6b89aacf7";
+  const loginUser = users?.users?.find((usr) => usr._id === loginUserId);
 
   const handlerForFollowBtn = (followId) => {
     const isFollow = loginUser.following.includes(followId);
+
     if (isFollow) {
       dispatch(
         unfollowUser({
@@ -38,7 +32,6 @@ const UsersProfile = () => {
           followUserId: followId,
         })
       );
-      setFollow(false);
     } else {
       dispatch(
         followUser({
@@ -46,9 +39,10 @@ const UsersProfile = () => {
           followUserId: followId,
         })
       );
-      setFollow(true);
     }
   };
+
+  const isFollowing = loginUser?.following.includes(userId);
 
   return (
     <div>
@@ -61,22 +55,19 @@ const UsersProfile = () => {
               alt="Profile Avatar"
               className="profile-avatar img-fluid rounded-circle w-50"
             />
-
             <p className="fs-4">
               <strong>{user.username}</strong>
             </p>
           </div>
-
           <div className="py-3">
             <h4>Bio</h4>
             <p>{user.bio}</p>
           </div>
-
           <button
             className="btn border-dark"
             onClick={() => handlerForFollowBtn(user._id)}
           >
-            {follow ? "Following" : "Follow"}
+            {isFollowing ? "Following" : "Follow"}
           </button>
         </div>
       )}

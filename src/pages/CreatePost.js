@@ -51,7 +51,7 @@ const CreatePost = () => {
 
   return (
     <div>
-      <h1 className="text-center mb-5 text-secondary">Create New Post</h1>
+      <h2 className="text-center mb-3 text-secondary">Create New Post</h2>
       <div className="card p-3">
         <form onSubmit={handlePostSubmit}>
           <input

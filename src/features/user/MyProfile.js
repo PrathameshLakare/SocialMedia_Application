@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, updateUser } from "./userSlice";
 import { fetchPosts } from "../post/postSlice";
@@ -22,9 +22,9 @@ const MyProfile = () => {
     (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"
   );
 
-  const [bio, setBio] = useState(user.bio);
+  const [bio, setBio] = useState(user?.bio);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(user.avatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar);
 
   const avatarOptions = [
     "https://img.freepik.com/free-psd/3d-rendering-avatar_23-2150833554.jpg?size=626&ext=jpg&ga=GA1.1.1278706250.1727432548&semt=ais_hybrid",
@@ -54,12 +54,12 @@ const MyProfile = () => {
   return (
     <div>
       {users.status === "loading" && <p>Loading...</p>}
-      {users && (
+      {user && (
         <div className="profile-container text-center">
           <h2>User Profile</h2>
           <div>
             <img
-              src={selectedAvatar}
+              src={user.avatar}
               alt="Profile Avatar"
               className="profile-avatar img-fluid rounded-circle w-50"
             />
@@ -108,7 +108,7 @@ const MyProfile = () => {
           )}
           <div className="py-3">
             <h4>Bio</h4>
-            <p>{bio}</p>
+            <p>{user.bio}</p>
           </div>
           <div className="py-1 m-3 bg-white">
             <div className="row">

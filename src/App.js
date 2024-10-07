@@ -53,7 +53,7 @@ export default function App() {
                   </li>
                 </ul>
               </div>
-              <div className="col-md-5">
+              <div className="col-md-5 py-3">
                 <Routes>
                   <Route path="/" element={<PostView />} />
                   <Route path="/createPost" element={<CreatePost />} />

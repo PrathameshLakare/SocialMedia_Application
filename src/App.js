@@ -5,6 +5,8 @@ import CreatePost from "./pages/CreatePost";
 import MyProfile from "./features/user/MyProfile";
 import UsersProfile from "./pages/UsersProfile";
 import Users from "./features/user/Users";
+import ExplorePage from "./pages/ExplorePage";
+import Bookmark from "./pages/Bookmark";
 
 export default function App() {
   return (
@@ -32,7 +34,7 @@ export default function App() {
                   </li>
                   <li className="nav-item mb-3">
                     <Link
-                      to="/"
+                      to="/explore"
                       className="link-dark link-underline link-underline-opacity-0"
                     >
                       Explore
@@ -47,6 +49,14 @@ export default function App() {
                     </Link>
                   </li>
                   <li className="nav-item mb-3">
+                    <Link
+                      to="/bookmark"
+                      className="link-dark link-underline link-underline-opacity-0"
+                    >
+                      Bookmark
+                    </Link>
+                  </li>
+                  <li className="nav-item mb-3">
                     <Link className="btn text-bg-danger" to={"/createPost"}>
                       Create New Post
                     </Link>
@@ -56,9 +66,11 @@ export default function App() {
               <div className="col-md-5 py-3">
                 <Routes>
                   <Route path="/" element={<PostView />} />
-                  <Route path="/createPost" element={<CreatePost />} />
+                  <Route path="/explore" element={<ExplorePage />} />
                   <Route path="/myProfile" element={<MyProfile />} />
                   <Route path="/profile/:userId" element={<UsersProfile />} />
+                  <Route path="/createPost" element={<CreatePost />} />
+                  <Route path="/bookmark" element={<Bookmark />} />
                 </Routes>
               </div>
               <div className="col-md-3">

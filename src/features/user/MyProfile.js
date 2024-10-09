@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers, updateUser } from "./userSlice";
+import { fetchBookmarks, fetchUsers, updateUser } from "./userSlice";
 import { fetchPosts } from "../post/postSlice";
 
 const MyProfile = () => {
@@ -9,14 +9,15 @@ const MyProfile = () => {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchPosts());
+    dispatch(fetchBookmarks({ userId: "66f64f5fd890c4a6b89aacf7" }));
   }, []);
 
   const users = useSelector((state) => state.users);
   const { posts } = useSelector((state) => state.posts);
 
-  const totalPosts = posts.filter(
-    (post) => post.author === "66f64f5fd890c4a6b89aacf7"
-  ).length;
+  const totalPosts =
+    posts.filter((post) => post.author === "66f64f5fd890c4a6b89aacf7").length ||
+    0;
 
   const user = users?.users?.find(
     (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"
@@ -113,13 +114,17 @@ const MyProfile = () => {
           <div className="py-1 m-3 bg-white">
             <div className="row">
               <div className="col">
-                <p>{user.following.length}</p>
+                <p>{user?.following.length}</p>
                 <p>Following</p>
               </div>
 
               <div className="col">
                 <p>{totalPosts}</p>
                 <p>Posts</p>
+              </div>
+              <div className="col">
+                <p>{users.bookmarks.length}</p>
+                <p>Bookmarks</p>
               </div>
             </div>
           </div>

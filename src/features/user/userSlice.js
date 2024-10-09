@@ -41,12 +41,45 @@ export const unfollowUser = createAsyncThunk(
   }
 );
 
+export const fetchBookmarks = createAsyncThunk(
+  "post/user/fetchBookmarks",
+  async ({ userId }) => {
+    const response = await axios.get(
+      `https://social-media-backend-rose.vercel.app/api/users/bookmark/${userId}`
+    );
+    return response.data;
+  }
+);
+
+export const addBookmarks = createAsyncThunk(
+  "post/user/addBookmark",
+  async ({ userId, postId }) => {
+    const response = await axios.post(
+      `https://social-media-backend-rose.vercel.app/api/users/add-bookmark/${postId}`,
+      { userId }
+    );
+    return response.data;
+  }
+);
+
+export const removeBookmarks = createAsyncThunk(
+  "post/user/removeBookmark",
+  async ({ userId, postId }) => {
+    const response = await axios.post(
+      `https://social-media-backend-rose.vercel.app/api/users/remove-bookmark/${postId}`,
+      { userId }
+    );
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "users",
   initialState: {
     users: [],
     status: "idle",
     error: null,
+    bookmarks: [],
   },
   reducers: {
     setLoggedInUser: (state, action) => {
@@ -73,21 +106,33 @@ const userSlice = createSlice({
     });
 
     builder.addCase(followUser.fulfilled, (state, action) => {
-      const { userId, followUserId } = action.payload;
-      const loggedInUser = state.users.find((user) => user._id === userId);
-      if (loggedInUser && !loggedInUser.following.includes(followUserId)) {
-        loggedInUser.following.push(followUserId);
+      const updatedUser = action.payload.user;
+      const loggedInUserIndex = state.users.findIndex(
+        (user) => user._id === updatedUser._id
+      );
+      if (loggedInUserIndex !== -1) {
+        state.users[loggedInUserIndex] = updatedUser;
       }
     });
 
     builder.addCase(unfollowUser.fulfilled, (state, action) => {
-      const { userId, followUserId } = action.payload;
-      const loggedInUser = state.users.find((user) => user._id === userId);
-      if (loggedInUser) {
-        loggedInUser.following = loggedInUser.following.filter(
-          (id) => id !== followUserId
-        );
+      const updatedUser = action.payload.user;
+      const loggedInUserIndex = state.users.findIndex(
+        (user) => user._id === updatedUser._id
+      );
+      if (loggedInUserIndex !== -1) {
+        state.users[loggedInUserIndex] = updatedUser;
       }
+    });
+
+    builder.addCase(fetchBookmarks.fulfilled, (state, action) => {
+      state.bookmarks = action.payload;
+    });
+    builder.addCase(addBookmarks.fulfilled, (state, action) => {
+      state.bookmarks = action.payload;
+    });
+    builder.addCase(removeBookmarks.fulfilled, (state, action) => {
+      state.bookmarks = action.payload;
     });
   },
 });

@@ -8,8 +8,11 @@ const CreatePost = () => {
   const location = useLocation();
   const [postContent, setPostContent] = useState("");
   const [titleInput, setTitleInput] = useState("");
+  const [mediaFile, setMediaFile] = useState(null);
 
-  const handleFileChange = (e) => {};
+  const handleFileChange = (e) => {
+    setMediaFile(e.target.files[0]);
+  };
 
   useEffect(() => {
     if (location.state) {
@@ -17,6 +20,7 @@ const CreatePost = () => {
       setTitleInput(location.state.title);
     }
   }, [location.state]);
+
   const handlePostSubmit = (e) => {
     e.preventDefault();
 
@@ -27,26 +31,23 @@ const CreatePost = () => {
           postData: {
             title: titleInput,
             content: postContent,
+            media: mediaFile,
           },
         })
       );
-
-      setPostContent("");
-      setTitleInput("");
-      alert("Post updated successfully.");
     } else {
       dispatch(
         addPostData({
           title: titleInput,
           content: postContent,
           author: "66f64f5fd890c4a6b89aacf7",
+          media: mediaFile || null,
         })
       );
-
-      setPostContent("");
-      setTitleInput("");
-      alert("Post saved successfully.");
     }
+    setPostContent("");
+    setTitleInput("");
+    setMediaFile([]);
   };
 
   return (
@@ -74,7 +75,7 @@ const CreatePost = () => {
             type="file"
             className="form-control mb-3"
             accept="image/*,video/*"
-            multiple
+            name="media"
             onChange={handleFileChange}
           />
           <button type="submit" className="btn btn-success">

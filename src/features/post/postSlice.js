@@ -80,12 +80,14 @@ const postSlice = createSlice({
     builder.addCase(addPostData.fulfilled, (state, action) => {
       state.status = "success";
       state.posts.push(action.payload);
+      alert("Post saved successfully.");
     });
     builder.addCase(editPost.fulfilled, (state, action) => {
       const index = state.posts.findIndex(
         (post) => post._id === action.payload._id
       );
       state.posts[index] = action.payload;
+      alert("Post updated successfully.");
     });
     builder.addCase(deletePost.fulfilled, (state, action) => {
       state.posts = state.posts.filter((post) => post._id !== action.payload);

@@ -3,17 +3,22 @@ import { deletePost, increaseLikeCount, setSortBy } from "./postSlice";
 import {
   BsListUl,
   BsSuitHeart,
-  BsChatLeftDots,
   BsBookmarkFill,
+  BsBookmark,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { addBookmarks, removeBookmarks } from "../user/userSlice";
 
 const PostList = () => {
   const dispatch = useDispatch();
   const { posts, sortBy } = useSelector((state) => state.posts);
-  const { users } = useSelector((state) => state.users);
+  const { users, bookmarks } = useSelector((state) => state.users);
 
-  const sortedPost = [...posts]?.sort((a, b) => {
+  const filteredPosts = posts.filter(
+    (post) => post.author === "66f64f5fd890c4a6b89aacf7"
+  );
+
+  const sortedPost = filteredPosts?.sort((a, b) => {
     if (sortBy === "date") {
       return new Date(b.createdAt) - new Date(a.createdAt);
     }
@@ -46,7 +51,9 @@ const PostList = () => {
       </button>
       {sortedPost &&
         sortedPost.map((post) => {
-          const user = users?.find((user) => user._id === post.author);
+          const user = users?.find(
+            (user) => user._id === "66f64f5fd890c4a6b89aacf7"
+          );
           const formattedDate = new Date(post.createdAt).toLocaleDateString();
 
           return (
@@ -144,11 +151,33 @@ const PostList = () => {
                       onClick={() => dispatch(increaseLikeCount(post._id))}
                     />
                   </div>
-                  <div className="col-4 text-center">
-                    <BsChatLeftDots />
-                  </div>
+                  <div className="col-4 text-center"></div>
                   <div className="col-4">
-                    <BsBookmarkFill className="float-end" />
+                    {bookmarks.includes(post._id) ? (
+                      <BsBookmarkFill
+                        className="float-end"
+                        onClick={() =>
+                          dispatch(
+                            removeBookmarks({
+                              userId: "66f64f5fd890c4a6b89aacf7",
+                              postId: post._id,
+                            })
+                          )
+                        }
+                      />
+                    ) : (
+                      <BsBookmark
+                        className="float-end"
+                        onClick={() =>
+                          dispatch(
+                            addBookmarks({
+                              userId: "66f64f5fd890c4a6b89aacf7",
+                              postId: post._id,
+                            })
+                          )
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               </div>

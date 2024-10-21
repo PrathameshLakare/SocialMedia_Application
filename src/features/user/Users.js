@@ -1,10 +1,18 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchUsers } from "./userSlice";
 
 const Users = () => {
-  const { users } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, []);
+  const { users, status, error } = useSelector((state) => state.users);
   return (
     <div>
+      {status === "loading" && <p>Loading...</p>}
+      {status === "error" && <p>Error: {error}</p>}
       <div className="bg-white p-3 ms-2">
         <h4>who to follow ?</h4>
         <hr />

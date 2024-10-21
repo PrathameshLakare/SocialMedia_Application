@@ -24,12 +24,11 @@ const PostList = () => {
 
   useEffect(() => {
     dispatch(fetchPosts());
-    dispatch(fetchUsers());
     dispatch(fetchBookmarks({ userId: "66f64f5fd890c4a6b89aacf7" }));
   }, []);
 
   const { posts } = useSelector((state) => state.posts);
-  const { users, bookmarks } = useSelector((state) => state.users);
+  const { bookmarks } = useSelector((state) => state.users);
 
   const filteredPost = posts?.filter((post) => bookmarks?.includes(post._id));
 
@@ -39,26 +38,25 @@ const PostList = () => {
 
       {filteredPost &&
         filteredPost.map((post) => {
-          const user = users?.find((user) => user._id === post.author);
           const formattedDate = new Date(post.createdAt).toLocaleDateString();
 
           return (
             <div key={post._id} className="card my-3">
               <div className="card-header bg-white">
-                {user ? (
+                {post.author ? (
                   <div>
                     <div className="row">
                       <div className="col-3 col-md-2">
                         <Link
                           to={
-                            user._id === "66f64f5fd890c4a6b89aacf7"
+                            post.author._id === "66f64f5fd890c4a6b89aacf7"
                               ? "/myProfile"
-                              : `/profile/${user._id}`
+                              : `/profile/${post.author._id}`
                           }
                         >
                           <img
-                            src={user.avatar || "default-avatar.png"}
-                            alt={`${user.username}'s avatar`}
+                            src={post.author.avatar || "default-avatar.png"}
+                            alt={`${post.author.username}'s avatar`}
                             className="img-fluid float-start rounded-circle w-50  "
                           />
                         </Link>
@@ -67,13 +65,13 @@ const PostList = () => {
                       <div className="col-3 col-md-3">
                         <Link
                           to={
-                            user._id === "66f64f5fd890c4a6b89aacf7"
+                            post.author._id === "66f64f5fd890c4a6b89aacf7"
                               ? "/myProfile"
-                              : `/profile/${user._id}`
+                              : `/profile/${post.author._id}`
                           }
                         >
                           <span className="float-start text-secondary ">
-                            {user.username}{" "}
+                            {post.author.username}{" "}
                           </span>
                         </Link>
                       </div>
@@ -84,7 +82,7 @@ const PostList = () => {
                       </div>
 
                       <div className="col-3 col-md-3 text-end">
-                        {user._id === "66f64f5fd890c4a6b89aacf7" && (
+                        {post.author._id === "66f64f5fd890c4a6b89aacf7" && (
                           <div className="dropdown">
                             <button
                               className="btn dropdown-toggle"

@@ -13,17 +13,34 @@ export const addPostData = createAsyncThunk(
   async (postData) => {
     const response = await axios.post(
       "https://social-media-backend-rose.vercel.app/api/user/post",
-      postData
+      postData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response.data;
   }
 );
 
-export const increaseLikeCount = createAsyncThunk(
+export const likePost = createAsyncThunk(
   "post/likes",
-  async (postId) => {
+  async ({ postId, userId }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/posts/like/${postId}`
+      `https://social-media-backend-rose.vercel.app/api/posts/like/${postId}`,
+      { userId: userId }
+    );
+    return response.data;
+  }
+);
+
+export const dislikePost = createAsyncThunk(
+  "post/dislike",
+  async ({ postId, userId }) => {
+    const response = await axios.post(
+      `https://social-media-backend-rose.vercel.app/api/posts/dislike/${postId}`,
+      { userId: userId }
     );
     return response.data;
   }
@@ -69,19 +86,23 @@ const postSlice = createSlice({
     builder.addCase(fetchPosts.pending, (state) => {
       state.status = "loading";
     });
+
     builder.addCase(fetchPosts.fulfilled, (state, action) => {
       state.status = "success";
       state.posts = action.payload;
     });
+
     builder.addCase(fetchPosts.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });
+
     builder.addCase(addPostData.fulfilled, (state, action) => {
       state.status = "success";
       state.posts.push(action.payload);
       alert("Post saved successfully.");
     });
+
     builder.addCase(editPost.fulfilled, (state, action) => {
       const index = state.posts.findIndex(
         (post) => post._id === action.payload._id
@@ -89,8 +110,27 @@ const postSlice = createSlice({
       state.posts[index] = action.payload;
       alert("Post updated successfully.");
     });
+
     builder.addCase(deletePost.fulfilled, (state, action) => {
       state.posts = state.posts.filter((post) => post._id !== action.payload);
+    });
+
+    builder.addCase(likePost.fulfilled, (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.posts[index] = action.payload;
+      }
+    });
+
+    builder.addCase(dislikePost.fulfilled, (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.posts[index] = action.payload;
+      }
     });
   },
 });

@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deletePost,
-  increaseLikeCount,
+  likePost,
+  dislikePost,
   setSortBy,
 } from "../features/post/postSlice";
 import {
@@ -10,6 +11,7 @@ import {
   BsSuitHeart,
   BsBookmarkFill,
   BsBookmark,
+  BsSuitHeartFill,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { fetchPosts } from "../features/post/postSlice";
@@ -158,9 +160,29 @@ const ExplorePage = () => {
               <div className="card-footer ">
                 <div className="row">
                   <div className="col-4">
-                    <BsSuitHeart
-                      onClick={() => dispatch(increaseLikeCount(post._id))}
-                    />
+                    {post.likes.includes("66f64f5fd890c4a6b89aacf7") ? (
+                      <BsSuitHeartFill
+                        onClick={() =>
+                          dispatch(
+                            dislikePost({
+                              postId: post._id,
+                              userId: "66f64f5fd890c4a6b89aacf7",
+                            })
+                          )
+                        }
+                      />
+                    ) : (
+                      <BsSuitHeart
+                        onClick={() =>
+                          dispatch(
+                            likePost({
+                              postId: post._id,
+                              userId: "66f64f5fd890c4a6b89aacf7",
+                            })
+                          )
+                        }
+                      />
+                    )}
                   </div>
                   <div className="col-4 text-center"></div>
                   <div className="col-4">

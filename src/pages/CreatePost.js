@@ -11,48 +11,47 @@ const CreatePost = () => {
   const [mediaFile, setMediaFile] = useState(null);
 
   const handleFileChange = (e) => {
-    setMediaFile(e.target.files[0]);
+    const file = e.target.files[0];
+
+    if (file) {
+      setMediaFile(file);
+    }
   };
 
   useEffect(() => {
     if (location.state) {
       setPostContent(location.state.content);
       setTitleInput(location.state.title);
+      setMediaFile(null);
     }
   }, [location.state]);
 
   const handlePostSubmit = (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append("title", titleInput);
+    formData.append("content", postContent);
+    if (mediaFile) formData.append("media", mediaFile);
+
     if (location.state) {
-      dispatch(
-        editPost({
-          postId: location.state._id,
-          postData: {
-            title: titleInput,
-            content: postContent,
-            media: mediaFile,
-          },
-        })
-      );
+      formData.append("author", "66f64f5fd890c4a6b89aacf7");
+      dispatch(editPost({ postId: location.state._id, postData: formData }));
     } else {
-      dispatch(
-        addPostData({
-          title: titleInput,
-          content: postContent,
-          author: "66f64f5fd890c4a6b89aacf7",
-          media: mediaFile || null,
-        })
-      );
+      formData.append("author", "66f64f5fd890c4a6b89aacf7");
+      dispatch(addPostData(formData));
     }
+
     setPostContent("");
     setTitleInput("");
-    setMediaFile([]);
+    setMediaFile(null);
   };
 
   return (
     <div>
-      <h2 className="text-center mb-3 text-secondary">Create New Post</h2>
+      <h2 className="text-center mb-3 text-secondary">
+        {location.state ? "Edit Post" : "Create New Post"}
+      </h2>
       <div className="card p-3">
         <form onSubmit={handlePostSubmit}>
           <input

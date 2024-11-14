@@ -9,6 +9,7 @@ const CreatePost = () => {
   const [postContent, setPostContent] = useState("");
   const [titleInput, setTitleInput] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -27,6 +28,14 @@ const CreatePost = () => {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 2000);
+    }
+  }, [successMessage]);
+
   const handlePostSubmit = (e) => {
     e.preventDefault();
 
@@ -38,11 +47,11 @@ const CreatePost = () => {
     if (location.state) {
       formData.append("author", "66f64f5fd890c4a6b89aacf7");
       dispatch(editPost({ postId: location.state._id, postData: formData }));
-      console.log(formData);
+      setSuccessMessage("Post data updated successfully.");
     } else {
       formData.append("author", "66f64f5fd890c4a6b89aacf7");
       dispatch(addPostData(formData));
-      console.log(formData);
+      setSuccessMessage("Post data saved successfully.");
     }
 
     setPostContent("");
@@ -88,6 +97,10 @@ const CreatePost = () => {
           <button type="submit" className="btn btn-success">
             {location.state ? "Update" : "Post"}
           </button>
+
+          {successMessage && (
+            <div className="alert alert-success mt-3">{successMessage}</div>
+          )}
         </form>
       </div>
     </div>

@@ -15,9 +15,9 @@ export default function App() {
         <div>
           <nav className="navbar navbar-expand-lg bg-white">
             <div className="container ">
-              <h3 className="navbar-brand text-danger fs-3" href="#">
+              <a className="navbar-brand text-danger fw-bold fs-2" href="/">
                 So<span className="text-primary">Media</span>
-              </h3>
+              </a>
             </div>
           </nav>
           <div className="container py-3">

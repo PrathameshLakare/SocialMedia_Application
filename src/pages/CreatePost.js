@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { addPostData, editPost } from "../features/post/postSlice";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -9,6 +9,7 @@ const CreatePost = () => {
   const [postContent, setPostContent] = useState("");
   const [titleInput, setTitleInput] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -37,14 +38,20 @@ const CreatePost = () => {
     if (location.state) {
       formData.append("author", "66f64f5fd890c4a6b89aacf7");
       dispatch(editPost({ postId: location.state._id, postData: formData }));
+      console.log(formData);
     } else {
       formData.append("author", "66f64f5fd890c4a6b89aacf7");
       dispatch(addPostData(formData));
+      console.log(formData);
     }
 
     setPostContent("");
     setTitleInput("");
     setMediaFile(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -76,6 +83,7 @@ const CreatePost = () => {
             accept="image/*,video/*"
             name="media"
             onChange={handleFileChange}
+            ref={fileInputRef}
           />
           <button type="submit" className="btn btn-success">
             {location.state ? "Update" : "Post"}

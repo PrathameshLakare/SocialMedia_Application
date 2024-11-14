@@ -99,7 +99,7 @@ const postSlice = createSlice({
 
     builder.addCase(addPostData.fulfilled, (state, action) => {
       state.status = "success";
-      state.posts.push(action.payload);
+      state.posts.push(action.payload.post);
       alert("Post saved successfully.");
     });
 

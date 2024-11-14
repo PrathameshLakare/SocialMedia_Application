@@ -154,8 +154,13 @@ const ExplorePage = () => {
                 )}
               </div>
               <div className="card-body ">
-                <p>{post.title}</p>
+                <p>
+                  <strong>{post.title}</strong>
+                </p>
                 <p>{post.content}</p>
+                {post.media && (
+                  <img src={post.media} className="img img-fluid rounded" />
+                )}
               </div>
               <div className="card-footer ">
                 <div className="row">

@@ -16,8 +16,8 @@ const MyProfile = () => {
   const { posts } = useSelector((state) => state.posts);
 
   const totalPosts =
-    posts.filter((post) => post.author === "66f64f5fd890c4a6b89aacf7").length ||
-    0;
+    posts.filter((post) => post.author._id === "66f64f5fd890c4a6b89aacf7")
+      .length || 0;
 
   const user = users?.users?.find(
     (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"

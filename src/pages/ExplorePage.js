@@ -37,7 +37,7 @@ const ExplorePage = () => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     }
     if (sortBy === "trending") {
-      return b.likes - a.likes;
+      return b.likes.length - a.likes.length;
     }
     return 0;
   });

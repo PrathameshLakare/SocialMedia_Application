@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const url = process.env.REACT_APP_SERVER_BASE_URL;
+
 export const fetchUsers = createAsyncThunk("post/users", async () => {
-  const response = await axios.get(
-    "https://social-media-backend-rose.vercel.app/api/user"
-  );
+  const response = await axios.get(`${url}/api/user`);
   return response.data;
 });
 
@@ -12,7 +12,7 @@ export const updateUser = createAsyncThunk(
   "post/update/user",
   async ({ userId, userData }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/user/update/${userId}`,
+      `${url}/api/user/update/${userId}`,
       userData
     );
     return response.data;
@@ -23,7 +23,7 @@ export const followUser = createAsyncThunk(
   "post/user/follow",
   async ({ userId, followUserId }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/users/follow/${followUserId}`,
+      `${url}/api/users/follow/${followUserId}`,
       { userId }
     );
     return response.data;
@@ -34,7 +34,7 @@ export const unfollowUser = createAsyncThunk(
   "post/user/unfollow",
   async ({ userId, followUserId }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/users/unfollow/${followUserId}`,
+      `${url}/api/users/unfollow/${followUserId}`,
       { userId }
     );
     return response.data;
@@ -44,9 +44,7 @@ export const unfollowUser = createAsyncThunk(
 export const fetchBookmarks = createAsyncThunk(
   "post/user/fetchBookmarks",
   async ({ userId }) => {
-    const response = await axios.get(
-      `https://social-media-backend-rose.vercel.app/api/users/bookmark/${userId}`
-    );
+    const response = await axios.get(`${url}/api/users/bookmark/${userId}`);
     return response.data;
   }
 );
@@ -55,7 +53,7 @@ export const addBookmarks = createAsyncThunk(
   "post/user/addBookmark",
   async ({ userId, postId }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/users/add-bookmark/${postId}`,
+      `${url}/api/users/add-bookmark/${postId}`,
       { userId }
     );
     return response.data;
@@ -66,7 +64,7 @@ export const removeBookmarks = createAsyncThunk(
   "post/user/removeBookmark",
   async ({ userId, postId }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/users/remove-bookmark/${postId}`,
+      `${url}/api/users/remove-bookmark/${postId}`,
       { userId }
     );
     return response.data;

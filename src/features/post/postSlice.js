@@ -1,25 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const url = process.env.REACT_APP_SERVER_BASE_URL;
+
 export const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
-  const response = await axios.get(
-    "https://social-media-backend-rose.vercel.app/api/post"
-  );
+  const response = await axios.get(`${url}/api/post`);
   return response.data;
 });
 
 export const addPostData = createAsyncThunk(
   "post/postPost",
   async (postData) => {
-    const response = await axios.post(
-      "https://social-media-backend-rose.vercel.app/api/user/post",
-      postData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axios.post(`${url}/api/user/post`, postData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   }
 );
@@ -27,10 +23,9 @@ export const addPostData = createAsyncThunk(
 export const likePost = createAsyncThunk(
   "post/likes",
   async ({ postId, userId }) => {
-    const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/posts/like/${postId}`,
-      { userId: userId }
-    );
+    const response = await axios.post(`${url}/api/posts/like/${postId}`, {
+      userId: userId,
+    });
     return response.data;
   }
 );
@@ -38,10 +33,9 @@ export const likePost = createAsyncThunk(
 export const dislikePost = createAsyncThunk(
   "post/dislike",
   async ({ postId, userId }) => {
-    const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/posts/dislike/${postId}`,
-      { userId: userId }
-    );
+    const response = await axios.post(`${url}/api/posts/dislike/${postId}`, {
+      userId: userId,
+    });
     return response.data;
   }
 );
@@ -50,7 +44,7 @@ export const editPost = createAsyncThunk(
   "post/editPost",
   async ({ postId, postData }) => {
     const response = await axios.post(
-      `https://social-media-backend-rose.vercel.app/api/posts/edit/${postId}`,
+      `${url}/api/posts/edit/${postId}`,
       postData
     );
     return response.data;
@@ -60,9 +54,7 @@ export const editPost = createAsyncThunk(
 export const deletePost = createAsyncThunk(
   "post/deletePost",
   async (postId) => {
-    const response = await axios.delete(
-      `https://social-media-backend-rose.vercel.app/api/user/posts/${postId}`
-    );
+    const response = await axios.delete(`${url}/api/user/posts/${postId}`);
     return postId;
   }
 );

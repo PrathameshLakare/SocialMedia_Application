@@ -43,8 +43,10 @@ export const unfollowUser = createAsyncThunk(
 
 export const fetchBookmarks = createAsyncThunk(
   "post/user/fetchBookmarks",
-  async ({ userId }) => {
-    const response = await axios.get(`${url}/api/users/bookmark/${userId}`);
+  async () => {
+    const response = await axios.get(`${url}/api/users/bookmark`, {
+      withCredentials: true,
+    });
     return response.data;
   }
 );

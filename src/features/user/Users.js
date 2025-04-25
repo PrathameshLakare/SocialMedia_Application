@@ -9,6 +9,8 @@ const Users = () => {
     dispatch(fetchUsers());
   }, []);
   const { users, status, error } = useSelector((state) => state.users);
+  const { user } = useSelector((state) => state.auth);
+
   return (
     <div>
       {status === "loading" && <p>Loading...</p>}
@@ -18,26 +20,24 @@ const Users = () => {
         <hr />
         <ul className="list-group">
           {users &&
-            users.map((user) => (
-              <li key={user._id} className="list-group-item py-2">
+            users.map((usr) => (
+              <li key={usr._id} className="list-group-item py-2">
                 <Link
                   to={
-                    user._id === "66f64f5fd890c4a6b89aacf7"
-                      ? "/myProfile"
-                      : `/profile/${user._id}`
+                    usr._id === user?._id ? "/myProfile" : `/profile/${usr._id}`
                   }
                   className=" link-secondary link-offset-2 link-underline link-underline-opacity-0"
                 >
                   <div className="row">
                     <div className="col-3 col-md-3">
                       <img
-                        src={user.avatar || "default-avatar.png"}
-                        alt={`${user.username}'s avatar`}
+                        src={usr.avatar || "default-avatar.png"}
+                        alt={`${usr.username}'s avatar`}
                         className="img-fluid float-start rounded-circle w-50  "
                       />
                     </div>
                     <div className="col-9 col-md-9">
-                      <p>{user.username}</p>
+                      <p>{usr.username}</p>
                     </div>
                   </div>
                 </Link>

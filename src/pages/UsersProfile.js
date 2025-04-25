@@ -16,10 +16,10 @@ const UsersProfile = () => {
   }, [dispatch]);
 
   const users = useSelector((state) => state.users);
-  const user = users?.users?.find((usr) => usr._id === userId);
+  const { user } = useSelector((state) => state.auth);
+  const myUser = users?.users?.find((usr) => usr._id === userId);
 
-  // Hardcoded loginUser ID
-  const loginUserId = "66f64f5fd890c4a6b89aacf7";
+  const loginUserId = user._id;
   const loginUser = users?.users?.find((usr) => usr._id === loginUserId);
 
   const handlerForFollowBtn = (followId) => {
@@ -28,44 +28,42 @@ const UsersProfile = () => {
     if (isFollow) {
       dispatch(
         unfollowUser({
-          userId: loginUser._id,
           followUserId: followId,
         })
       );
     } else {
       dispatch(
         followUser({
-          userId: loginUser._id,
           followUserId: followId,
         })
       );
     }
   };
 
-  const isFollowing = loginUser?.following.includes(userId);
+  const isFollowing = loginUser?.following?.includes(userId);
 
   return (
     <div>
-      {user && (
+      {myUser && (
         <div className="profile-container text-center">
           <h2>User Profile</h2>
           <div>
             <img
-              src={user.avatar}
+              src={myUser.avatar}
               alt="Profile Avatar"
               className="profile-avatar img-fluid rounded-circle w-50"
             />
             <p className="fs-4">
-              <strong>{user.username}</strong>
+              <strong>{myUser.username}</strong>
             </p>
           </div>
           <div className="py-3">
             <h4>Bio</h4>
-            <p>{user.bio}</p>
+            <p>{myUser.bio}</p>
           </div>
           <button
             className="btn border-dark"
-            onClick={() => handlerForFollowBtn(user._id)}
+            onClick={() => handlerForFollowBtn(myUser._id)}
           >
             {isFollowing ? "Following" : "Follow"}
           </button>

@@ -9,23 +9,21 @@ const MyProfile = () => {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchPosts());
-    dispatch(fetchBookmarks({ userId: "66f64f5fd890c4a6b89aacf7" }));
+    dispatch(fetchBookmarks());
   }, []);
 
   const users = useSelector((state) => state.users);
   const { posts } = useSelector((state) => state.posts);
+  const { user } = useSelector((state) => state.auth);
+
+  const myUser = users?.users?.find((usr) => usr._id === user._id);
 
   const totalPosts =
-    posts.filter((post) => post.author._id === "66f64f5fd890c4a6b89aacf7")
-      .length || 0;
+    posts.filter((post) => post?.author?._id === user._id).length || 0;
 
-  const user = users?.users?.find(
-    (usr) => usr._id === "66f64f5fd890c4a6b89aacf7"
-  );
-
-  const [bio, setBio] = useState(user?.bio);
+  const [bio, setBio] = useState(myUser?.bio);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(myUser?.avatar);
 
   const avatarOptions = [
     "https://img.freepik.com/free-psd/3d-rendering-avatar_23-2150833554.jpg?size=626&ext=jpg&ga=GA1.1.1278706250.1727432548&semt=ais_hybrid",
@@ -46,7 +44,6 @@ const MyProfile = () => {
 
     dispatch(
       updateUser({
-        userId: user._id,
         userData: { avatar: selectedAvatar, bio },
       })
     );
@@ -55,18 +52,18 @@ const MyProfile = () => {
   return (
     <div>
       {users.status === "loading" && <p>Loading...</p>}
-      {user && (
+      {myUser && (
         <div className="profile-container text-center">
           <h2>User Profile</h2>
           <div>
             <img
-              src={user.avatar}
+              src={myUser.avatar}
               alt="Profile Avatar"
               className="profile-avatar img-fluid rounded-circle w-50"
             />
 
             <p className="fs-4">
-              <strong>{user.username}</strong>
+              <strong>{myUser.username}</strong>
             </p>
             <button
               className="btn border-dark"
@@ -109,12 +106,12 @@ const MyProfile = () => {
           )}
           <div className="py-3">
             <h4>Bio</h4>
-            <p>{user.bio}</p>
+            <p>{myUser.bio}</p>
           </div>
           <div className="py-1 m-3 bg-white">
             <div className="row">
               <div className="col">
-                <p>{user?.following.length}</p>
+                <p>{myUser?.following?.length}</p>
                 <p>Following</p>
               </div>
 
@@ -123,7 +120,7 @@ const MyProfile = () => {
                 <p>Posts</p>
               </div>
               <div className="col">
-                <p>{users.bookmarks.length}</p>
+                <p>{myUser.bookmarks.length}</p>
                 <p>Bookmarks</p>
               </div>
             </div>

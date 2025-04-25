@@ -15,27 +15,29 @@ export const addPostData = createAsyncThunk(
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     });
     return response.data;
   }
 );
 
-export const likePost = createAsyncThunk(
-  "post/likes",
-  async ({ postId, userId }) => {
-    const response = await axios.post(`${url}/api/posts/like/${postId}`, {
-      userId: userId,
-    });
-    return response.data;
-  }
-);
+export const likePost = createAsyncThunk("post/likes", async ({ postId }) => {
+  const response = await axios.post(
+    `${url}/api/posts/like/${postId}`,
+    {},
+    { withCredentials: true }
+  );
+  return response.data;
+});
 
 export const dislikePost = createAsyncThunk(
   "post/dislike",
-  async ({ postId, userId }) => {
-    const response = await axios.post(`${url}/api/posts/dislike/${postId}`, {
-      userId: userId,
-    });
+  async ({ postId }) => {
+    const response = await axios.post(
+      `${url}/api/posts/dislike/${postId}`,
+      {},
+      { withCredentials: true }
+    );
     return response.data;
   }
 );
@@ -45,7 +47,8 @@ export const editPost = createAsyncThunk(
   async ({ postId, postData }) => {
     const response = await axios.post(
       `${url}/api/posts/edit/${postId}`,
-      postData
+      postData,
+      { withCredentials: true }
     );
     return response.data;
   }
@@ -54,7 +57,9 @@ export const editPost = createAsyncThunk(
 export const deletePost = createAsyncThunk(
   "post/deletePost",
   async (postId) => {
-    const response = await axios.delete(`${url}/api/user/posts/${postId}`);
+    const response = await axios.delete(`${url}/api/user/posts/${postId}`, {
+      withCredentials: true,
+    });
     return postId;
   }
 );

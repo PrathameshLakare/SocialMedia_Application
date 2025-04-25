@@ -33,6 +33,40 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${url}/api/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong."
+      );
+    }
+  }
+);
+
+export const fetchUserData = createAsyncThunk(
+  "auth/me",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/api/user/me`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "No user found");
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "myUser",
   initialState: {
@@ -40,31 +74,53 @@ const authSlice = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+    logout: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(registerUser.pending, (state, action) => {
+    builder.addCase(registerUser.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.status = "success";
-      state.user = action.payload;
+      console.log(action.payload);
+      state.user = action.payload.user;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.status = "error";
       state.error = action.payload;
     });
+
     builder.addCase(loginUser.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.status = "success";
-      state.user = action.payload;
+      console.log(action.payload);
+      state.user = action.payload.user;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.status = "error";
       state.error = action.payload;
     });
+
+    builder.addCase(fetchUserData.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(fetchUserData.fulfilled, (state, action) => {
+      state.status = "success";
+      state.user = action.payload;
+    });
+    builder.addCase(fetchUserData.rejected, (state, action) => {
+      state.status = "error";
+    });
   },
 });
 
+export const { clearError, logout } = authSlice.actions;
 export default authSlice.reducer;

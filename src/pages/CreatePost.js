@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { addPostData, editPost } from "../features/post/postSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 const CreatePost = () => {
@@ -14,7 +14,6 @@ const CreatePost = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
     if (file) {
       setMediaFile(file);
     }
@@ -33,6 +32,7 @@ const CreatePost = () => {
       const timer = setTimeout(() => {
         setSuccessMessage("");
       }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [successMessage]);
 
@@ -45,11 +45,9 @@ const CreatePost = () => {
     if (mediaFile) formData.append("media", mediaFile);
 
     if (location.state) {
-      formData.append("author", "66f64f5fd890c4a6b89aacf7");
       dispatch(editPost({ postId: location.state._id, postData: formData }));
       setSuccessMessage("Post data updated successfully.");
     } else {
-      formData.append("author", "66f64f5fd890c4a6b89aacf7");
       dispatch(addPostData(formData));
       setSuccessMessage("Post data saved successfully.");
     }
@@ -57,7 +55,6 @@ const CreatePost = () => {
     setPostContent("");
     setTitleInput("");
     setMediaFile(null);
-
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }

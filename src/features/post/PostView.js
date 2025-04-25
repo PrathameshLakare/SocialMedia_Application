@@ -10,7 +10,7 @@ const PostView = () => {
 
   useEffect(() => {
     dispatch(fetchPosts());
-    dispatch(fetchBookmarks({ userId: "66f64f5fd890c4a6b89aacf7" }));
+    dispatch(fetchBookmarks());
   }, []);
 
   return (

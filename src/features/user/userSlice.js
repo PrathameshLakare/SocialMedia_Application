@@ -10,21 +10,23 @@ export const fetchUsers = createAsyncThunk("post/users", async () => {
 
 export const updateUser = createAsyncThunk(
   "post/update/user",
-  async ({ userId, userData }) => {
-    const response = await axios.post(
-      `${url}/api/user/update/${userId}`,
-      userData
-    );
+  async ({ userData }) => {
+    const response = await axios.post(`${url}/api/user/update`, userData, {
+      withCredentials: true,
+    });
     return response.data;
   }
 );
 
 export const followUser = createAsyncThunk(
   "post/user/follow",
-  async ({ userId, followUserId }) => {
+  async ({ followUserId }) => {
     const response = await axios.post(
       `${url}/api/users/follow/${followUserId}`,
-      { userId }
+      {},
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   }
@@ -32,10 +34,13 @@ export const followUser = createAsyncThunk(
 
 export const unfollowUser = createAsyncThunk(
   "post/user/unfollow",
-  async ({ userId, followUserId }) => {
+  async ({ followUserId }) => {
     const response = await axios.post(
       `${url}/api/users/unfollow/${followUserId}`,
-      { userId }
+      {},
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   }
@@ -53,10 +58,13 @@ export const fetchBookmarks = createAsyncThunk(
 
 export const addBookmarks = createAsyncThunk(
   "post/user/addBookmark",
-  async ({ userId, postId }) => {
+  async ({ postId }) => {
     const response = await axios.post(
       `${url}/api/users/add-bookmark/${postId}`,
-      { userId }
+      {},
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   }
@@ -64,10 +72,13 @@ export const addBookmarks = createAsyncThunk(
 
 export const removeBookmarks = createAsyncThunk(
   "post/user/removeBookmark",
-  async ({ userId, postId }) => {
+  async ({ postId }) => {
     const response = await axios.post(
       `${url}/api/users/remove-bookmark/${postId}`,
-      { userId }
+      {},
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   }
@@ -99,12 +110,13 @@ const userSlice = createSlice({
       state.error = action.error.message;
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
+      console.log(action.payload);
       const index = state.users.findIndex(
         (user) => user._id === action.payload._id
       );
+      console.log(index);
       if (index !== -1) state.users[index] = action.payload;
     });
-
     builder.addCase(followUser.fulfilled, (state, action) => {
       const updatedUser = action.payload.user;
       const loggedInUserIndex = state.users.findIndex(

@@ -5,6 +5,7 @@ import {
   Route,
   Link,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import PostView from "./features/post/PostView";
 import CreatePost from "./pages/CreatePost";
@@ -15,11 +16,26 @@ import ExplorePage from "./pages/ExplorePage";
 import Bookmark from "./pages/Bookmark";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData, logout, logoutUser } from "./features/auth/authSlice";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function Layout() {
+  const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
+
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, []);
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    dispatch(logout());
+  };
 
   return (
     <div>
@@ -69,23 +85,76 @@ function Layout() {
                     </Link>
                   </li>
                   <li className="nav-item mb-3">
-                    <Link className="btn text-bg-danger" to={"/createPost"}>
+                    <Link
+                      className="link-dark link-underline link-underline-opacity-0"
+                      to="/createPost"
+                    >
                       Create New Post
                     </Link>
+                  </li>
+                  <li className="nav-item mb-3">
+                    <button
+                      className="btn btn-outline-danger w-50"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
                   </li>
                 </ul>
               </div>
             )}
             <div className={isAuthPage ? "col-md-12 py-3" : "col-md-5 py-3"}>
               <Routes>
-                <Route path="/" element={<PostView />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <PostView />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/explore" element={<ExplorePage />} />
-                <Route path="/myProfile" element={<MyProfile />} />
-                <Route path="/profile/:userId" element={<UsersProfile />} />
-                <Route path="/createPost" element={<CreatePost />} />
-                <Route path="/bookmark" element={<Bookmark />} />
+                <Route
+                  path="/explore"
+                  element={
+                    <ProtectedRoute>
+                      <ExplorePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/myProfile"
+                  element={
+                    <ProtectedRoute>
+                      <MyProfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <UsersProfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/createPost"
+                  element={
+                    <ProtectedRoute>
+                      <CreatePost />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/bookmark"
+                  element={
+                    <ProtectedRoute>
+                      <Bookmark />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </div>
             {!isAuthPage && (

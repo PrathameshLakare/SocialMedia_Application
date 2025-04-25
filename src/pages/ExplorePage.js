@@ -26,10 +26,11 @@ const ExplorePage = () => {
   const dispatch = useDispatch();
   const { posts, sortBy, status } = useSelector((state) => state.posts);
   const { bookmarks } = useSelector((state) => state.users);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchPosts());
-    dispatch(fetchBookmarks({ userId: "66f64f5fd890c4a6b89aacf7" }));
+    dispatch(fetchBookmarks());
   }, []);
 
   const sortedPost = [...posts]?.sort((a, b) => {
@@ -78,7 +79,7 @@ const ExplorePage = () => {
                       <div className="col-3 col-md-2">
                         <Link
                           to={
-                            post.author._id === "66f64f5fd890c4a6b89aacf7"
+                            post.author._id === user._id
                               ? "/myProfile"
                               : `/profile/${post.author._id}`
                           }
@@ -94,7 +95,7 @@ const ExplorePage = () => {
                       <div className="col-3 col-md-3">
                         <Link
                           to={
-                            post.author._id === "66f64f5fd890c4a6b89aacf7"
+                            post.author._id === user._id
                               ? "/myProfile"
                               : `/profile/${post.author._id}`
                           }
@@ -111,7 +112,7 @@ const ExplorePage = () => {
                       </div>
 
                       <div className="col-3 col-md-3 text-end">
-                        {post.author._id === "66f64f5fd890c4a6b89aacf7" && (
+                        {post.author._id === user._id && (
                           <div className="dropdown">
                             <button
                               className="btn dropdown-toggle"
@@ -165,13 +166,12 @@ const ExplorePage = () => {
               <div className="card-footer ">
                 <div className="row">
                   <div className="col-4">
-                    {post.likes.includes("66f64f5fd890c4a6b89aacf7") ? (
+                    {post.likes.includes(user._id) ? (
                       <BsSuitHeartFill
                         onClick={() =>
                           dispatch(
                             dislikePost({
                               postId: post._id,
-                              userId: "66f64f5fd890c4a6b89aacf7",
                             })
                           )
                         }
@@ -182,7 +182,6 @@ const ExplorePage = () => {
                           dispatch(
                             likePost({
                               postId: post._id,
-                              userId: "66f64f5fd890c4a6b89aacf7",
                             })
                           )
                         }
@@ -197,7 +196,6 @@ const ExplorePage = () => {
                         onClick={() =>
                           dispatch(
                             removeBookmarks({
-                              userId: "66f64f5fd890c4a6b89aacf7",
                               postId: post._id,
                             })
                           )
@@ -209,7 +207,6 @@ const ExplorePage = () => {
                         onClick={() =>
                           dispatch(
                             addBookmarks({
-                              userId: "66f64f5fd890c4a6b89aacf7",
                               postId: post._id,
                             })
                           )

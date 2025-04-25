@@ -14,9 +14,10 @@ const PostList = () => {
   const dispatch = useDispatch();
   const { posts, sortBy } = useSelector((state) => state.posts);
   const { bookmarks } = useSelector((state) => state.users);
+  const { user } = useSelector((state) => state.auth);
 
-  const filteredPosts = posts.filter(
-    (post) => post.author._id === "66f64f5fd890c4a6b89aacf7"
+  const filteredPosts = posts?.filter(
+    (post) => post?.author?._id === user?._id
   );
 
   const sortedPost = filteredPosts?.sort((a, b) => {
@@ -50,7 +51,7 @@ const PostList = () => {
       >
         Date
       </button>
-      {sortedPost &&
+      {sortedPost.length > 0 ? (
         sortedPost.map((post) => {
           const formattedDate = new Date(post.createdAt).toLocaleDateString();
 
@@ -63,7 +64,7 @@ const PostList = () => {
                       <div className="col-3 col-md-2">
                         <Link
                           to={
-                            post.author._id === "66f64f5fd890c4a6b89aacf7"
+                            post.author._id === user._id
                               ? "/myProfile"
                               : `/profile/${post.author._id}`
                           }
@@ -79,7 +80,7 @@ const PostList = () => {
                       <div className="col-3 col-md-3">
                         <Link
                           to={
-                            post.author._id === "66f64f5fd890c4a6b89aacf7"
+                            post.author._id === user._id
                               ? "/myProfile"
                               : `/profile/${post.author._id}`
                           }
@@ -96,7 +97,7 @@ const PostList = () => {
                       </div>
 
                       <div className="col-3 col-md-3 text-end">
-                        {post.author._id === "66f64f5fd890c4a6b89aacf7" && (
+                        {post.author._id === user._id && (
                           <div className="dropdown">
                             <button
                               className="btn dropdown-toggle"
@@ -150,13 +151,12 @@ const PostList = () => {
               <div className="card-footer ">
                 <div className="row">
                   <div className="col-4">
-                    {post.likes.includes("66f64f5fd890c4a6b89aacf7") ? (
+                    {post.likes.includes(user._id) ? (
                       <BsSuitHeartFill
                         onClick={() =>
                           dispatch(
                             dislikePost({
                               postId: post._id,
-                              userId: "66f64f5fd890c4a6b89aacf7",
                             })
                           )
                         }
@@ -167,7 +167,6 @@ const PostList = () => {
                           dispatch(
                             likePost({
                               postId: post._id,
-                              userId: "66f64f5fd890c4a6b89aacf7",
                             })
                           )
                         }
@@ -182,7 +181,6 @@ const PostList = () => {
                         onClick={() =>
                           dispatch(
                             removeBookmarks({
-                              userId: "66f64f5fd890c4a6b89aacf7",
                               postId: post._id,
                             })
                           )
@@ -194,7 +192,6 @@ const PostList = () => {
                         onClick={() =>
                           dispatch(
                             addBookmarks({
-                              userId: "66f64f5fd890c4a6b89aacf7",
                               postId: post._id,
                             })
                           )
@@ -206,7 +203,13 @@ const PostList = () => {
               </div>
             </div>
           );
-        })}
+        })
+      ) : (
+        <p className="my-3 py-3">
+          You haven’t posted anything yet. Add your first post to get started,
+          or head over to the Explore page to check out posts from others.
+        </p>
+      )}
     </div>
   );
 };

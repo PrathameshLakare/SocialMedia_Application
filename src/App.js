@@ -26,7 +26,7 @@ function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const isAuthPage =
-    location.pathname === "/login" || location.pathname === "/register";
+    location.pathname === "/" || location.pathname === "/register";
 
   useEffect(() => {
     dispatch(fetchUserData());
@@ -42,7 +42,7 @@ function Layout() {
       <div>
         <nav className="navbar navbar-expand-lg bg-white">
           <div className="container ">
-            <a className="navbar-brand text-danger fw-bold fs-2" href="/">
+            <a className="navbar-brand text-danger fw-bold fs-2" href="/home">
               So<span className="text-primary">Media</span>
             </a>
           </div>
@@ -54,7 +54,7 @@ function Layout() {
                 <ul className="nav flex-column">
                   <li className="nav-item mb-3">
                     <Link
-                      to="/"
+                      to="/home"
                       className="link-dark link-underline link-underline-opacity-0"
                     >
                       Home
@@ -106,7 +106,7 @@ function Layout() {
             <div className={isAuthPage ? "col-md-12 py-3" : "col-md-5 py-3"}>
               <Routes>
                 <Route
-                  path="/"
+                  path="/home"
                   element={
                     <ProtectedRoute>
                       <PostView />
@@ -114,7 +114,7 @@ function Layout() {
                   }
                 />
                 <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Login />} />
                 <Route
                   path="/explore"
                   element={

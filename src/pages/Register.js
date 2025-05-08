@@ -30,7 +30,7 @@ export default function Register() {
       setIsError(false);
       setTimeout(() => {
         setMessage("");
-        navigate("/");
+        navigate("/home");
       }, 2000);
     } else if (status === "error" && error) {
       setMessage(`Error: ${error}`);

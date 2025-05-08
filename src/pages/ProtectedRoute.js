@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!user || Object.keys(user).length === 0) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;

@@ -441,4 +441,4 @@ Sample Response:
 
 ## Contact
 
-For bugs or feature requests, please reach out
+For bugs or feature requests, please reach out prathameshlakare001@gmail.com
